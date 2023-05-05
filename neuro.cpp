@@ -26,8 +26,6 @@ extern "C"
 #include <thread>
 
 
-using std::tie;
-
 #define TYPE_CHECK 		0
 #define STATIC_SIZES 	0
 

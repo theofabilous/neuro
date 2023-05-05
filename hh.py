@@ -422,7 +422,7 @@ def animate(
 
     with writer.saving(figure.figure, output_path, dpi=dpi):
         t_index = 0
-        for e in neuron.enumerate():
+        for e in neuron:
             figure.plot(*e)
             writer.grab_frame()
             t_index += 1
@@ -453,9 +453,9 @@ if __name__ == '__main__':
     "Create the figure object"
     # fig = NeuronFigure2D(True, figsize=(20,10))
     # fig.set_ylimits((-60, 250), (-0.2, 1.2))
-    fig = NeuronFigure2D(plot_gates=False, figsize=(20,10))
+    fig = NeuronFigure2D(plot_gates=True, figsize=(20,10))
     # fig.set_title(ax_title, '')
-    fig.set_ylimits(-60, 250)
+    fig.set_ylimits((-60, 250), (-0.2, 1.2))
 
     "(could also be a 3d figure)"
     # X, Y = draw_path(neuron.N, neuron.dx, chance=0.75, bounds=PI/3, rot_scale=0.4)
@@ -469,96 +469,3 @@ if __name__ == '__main__':
 
 
 
-def anim_bw(save=None):
-    if save is None:
-        save = path.expanduser('~/Desktop')
-    T = 10.
-    frame_int = 0.03
-
-    base_args = dict (
-        dx=0.005,
-        D=0.5,
-        E_K=-12.0,
-        dt_factor=0.2,
-        verbosity=1
-        # explicit=False,
-        # correction=True,
-    )
-
-    # neuron = AP(dx=0.005, D=0.5, E_K=-12.0)
-    neuron = AP(**base_args)
-    neuron.set_initial_conditions()
-    # neuron.set_initial_voltage(16., start=0.8, end=1.0)
-    # neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
-    neuron.set_current(0.1, max_time=0.5)
-    # neuron.set_current(1.2)
-    neuron.set_iter_params(interval=frame_int, T=T, tolerance=5e-4)
-
-    ID = 600
-    # ax_title = (r'$V=0.001$,  $I(t)=1.5$' +'\n'+
-                # r'$E_K=-12.0$ with dx=0.005, D=0.5')
-    
-    writer = mpl_anim.FFMpegWriter(fps=30)
-
-    fig = NeuronFigure2D(True, figsize=(20,10))
-    # fig.set_titles(ax_title, '')
-    fig.set_ylimits((-60, 250), (-0.2, 1.2))
-    
-
-    fname = f'neuron_new_{ID}_unif.mp4'
-
-    print(f'Saving to {save}/{fname}\n' + '-'*30 + '\n')
-    with writer.saving(fig.fig, save + '/' + fname, dpi=150):
-        ti = 0
-        for t, e in neuron.enumerate():
-            fig.plot(*e)
-            writer.grab_frame()
-            print(f'[{ti}] {t:.3f} -> {T} {{{neuron.dt=:.4e}}}'+' '*10, end='\r')
-            ti += 1
-
-def anim_bw_3d(save=None):
-    if save is None:
-        save = path.expanduser('~/Desktop')
-    T = 30.
-    frame_int = 0.03
-
-    base_args = dict (
-        dx=0.005,
-        D=0.5,
-        E_K=-12.0,
-        dt_factor=0.2,
-        verbosity=1
-        # explicit=False,
-        # correction=True,
-    )
-
-    # neuron = AP(dx=0.005, D=0.5, E_K=-12.0)
-    neuron = AP(**base_args)
-    neuron.set_initial_conditions()
-    neuron.set_initial_voltage(16., start=0.8, end=1.0)
-    neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
-    # neuron.set_current(1.2)
-    neuron.set_iter_params(interval=frame_int, T=T, tolerance=5e-4)
-    ID = 461
-    ax_title = (r'$V=16.$ from 0.8->1.,  $I(t)=max(1.4*cos(2t),0)$' +'\n'+
-                f'$E_K={base_args["E_K"]:.2f}$ with dx={base_args["dx"]:.4f}, ' +
-                f'D={base_args["D"]:.2f}, initial dt={neuron.dt:.5e}')
-    
-    writer = mpl_anim.FFMpegWriter(fps=30)
-
-    X, Y = draw_path(neuron.N, neuron.dx, chance=0.75, bounds=PI/3, rot_scale=0.4)
-    fig = NeuronFigure3D(figsize=(10,10), elev=20, azim=-85)
-    fig.set_title(ax_title)
-    fig.set_zlimit(-60, 250)
-    fig.set_path(X, Y) 
-
-    fname = f'neuron_new_{ID}_unif.mp4'
-
-    print(f'Saving to {save}/{fname}\nTitle: {ax_title}\n' + '-'*30 + '\n')
-    with writer.saving(fig.fig, save + '/' + fname, dpi=150):
-        ti = 0
-        # for _, (v, *_) in neuron.enumerate():
-        for v, *_ in neuron:
-            fig.plot(v)
-            writer.grab_frame()
-            ti += 1
