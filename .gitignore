@@ -1,0 +1,7 @@
+*.json
+__pycache__
+build
+media
+*.so
+CMakeLists.txt
+exports
