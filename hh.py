@@ -264,13 +264,13 @@ class AP:
         self.set_iter_params()
 
     def set_initial_voltage(self, *args, **kwargs):
-        V0 = None
+        _V0 = None
         match args, kwargs:
             case [float(V0) | int(V0)], {**extra} if not extra:
-                V0 = np.zeros(AP.N) + V0
+                _V0 = np.zeros(AP.N) + V0
             case [np.ndarray(V0)], {**extra} if not extra:
                 assert V0.shape == (AP.N,)
-                V0 = V0
+                _V0 = V0
             case (
                 ([float(V0) | int(V0), (lo, hi)], _)  | 
                 (
@@ -283,12 +283,12 @@ class AP:
                     assert 0. <= lo < hi <= 1.
                     lo = int(round(lo*AP.N))
                     hi = int(round(hi*AP.N))
-                V0 = np.zeros(AP.N)
-                V0[lo:hi] = V0
+                _V0 = np.zeros(AP.N)
+                _V0[lo:hi] = V0
             case _:
                 raise ValueError(f'Invalid args: {args}, {kwargs}')
 
-        self.set_initial_conditions(V0=V0)
+        self.set_initial_conditions(V0=_V0)
 
 
     def set_initial_conditions (
@@ -410,7 +410,9 @@ def animate(
 
     output_path = None
     if save_path is not None:
-        output_path = path.realpath(path.expanduser(save_path)).join(save_name)
+        output_path = path.realpath(
+            path.join(path.expanduser(save_path), path.expanduser(save_name))
+        )
     else:
         output_path = path.realpath(path.expanduser(save_name))
 
@@ -440,17 +442,20 @@ if __name__ == '__main__':
 
     "Create the neuron object"
     neuron = AP(**base_args)
-    neuron.set_initial_voltage(0.)
+    # neuron.set_initial_voltage(0.)
+    neuron.set_initial_voltage(10., start=0.8, end=1.0)
     # neuron.set_current(1.2)
-    # neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
-    neuron.set_current(0.1, max_time=0.5)
+    neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
+    # neuron.set_current(0.1, max_time=0.5)
     # neuron.set_current(1.2)
     neuron.set_iter_params(interval=draw_interval, T=T, tolerance=5e-4)
 
     "Create the figure object"
-    fig = NeuronFigure2D(True, figsize=(20,10))
+    # fig = NeuronFigure2D(True, figsize=(20,10))
+    # fig.set_ylimits((-60, 250), (-0.2, 1.2))
+    fig = NeuronFigure2D(plot_gates=False, figsize=(20,10))
     # fig.set_title(ax_title, '')
-    fig.set_ylimits((-60, 250), (-0.2, 1.2))
+    fig.set_ylimits(-60, 250)
 
     "(could also be a 3d figure)"
     # X, Y = draw_path(neuron.N, neuron.dx, chance=0.75, bounds=PI/3, rot_scale=0.4)
@@ -460,46 +465,8 @@ if __name__ == '__main__':
     # fig.set_path(X, Y) 
 
 
+    animate('current_sine_voltage_at_end.mp4', fig, neuron, save_path='~/Desktop', dpi=150)
 
-# def animate(
-#     save_name: str,
-#     save_path: Optional[str] = None,
-#     dimensions: int = 2,
-# ):
-#     if save_path is None:
-#         save_path = path.expanduser('~/Desktop')
-#
-#     save_path = path.realpath(path.expanduser(save_path)).join(save_name)
-#
-#     T = 30.
-#     frame_int = 0.03
-#
-#     base_args = dict (
-#         dx=0.005,
-#         D=0.5,
-#         E_K=-12.0,
-#         dt_factor=0.2,
-#         verbosity=0
-#     )
-#
-#     neuron = AP(**base_args)
-#     neuron.set_initial_conditions()
-#     neuron.set_initial_voltage(16., start=0.8, end=1.0)
-#     neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
-#     # neuron.set_current(1.2)
-#     neuron.set_iter_params(interval=frame_int, T=T, tolerance=5e-4)
-#
-#     plot_title = ...
-#
-#     fig = None
-#     writer = mpl_anim.FFMpegWriter(fps=30)
-#     if dimensions == 2:
-#         fig = NeuronFigure2D(True, figsize=(20,10))
-#         fig.set_ylimits((-60, 250), (-0.2, 1.2))
-#     elif dimensions == 3:
-#         fig = NeuronFigure3D(figsize=(10,10), elev=20, azim=-85)
-#     else:
-#         raise ValueError('Dimensions must be 2 or 3')
 
 
 def anim_bw(save=None):
@@ -595,8 +562,3 @@ def anim_bw_3d(save=None):
             fig.plot(v)
             writer.grab_frame()
             ti += 1
-
-if __name__ == '__main__':
-    # anim_bw_3d()
-    anim_bw()
-
