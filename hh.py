@@ -330,15 +330,17 @@ class AP:
 
     def set_iter_params(
         self,
-        tolerance: float = TOLERANCE,
-        interval:  float = 0.01,
-        T:         float = 2,
-        verbose:   bool  = True,
+        tolerance:   float = TOLERANCE,
+        interval:    float = 0.01,
+        T:           float = 2,
+        verbose:     bool  = True,
+        get_dt_list: bool = False
     ):
         self.tolerance = tolerance
         self.interval  = interval
         self.T         = T
         self.verbose   = verbose
+        self.get_dt_list = get_dt_list
 
     def _iter_prepare(self):
         self.count = 0
@@ -377,23 +379,31 @@ class AP:
             elif self.mode == AP.EnumerateMode:
                 return 0., (self.V, self.m, self.n, self.h)
 
-        self.dt, dist = neuro.get_next_n(
+        self.dt, *extra = neuro.get_next_n(
             self.V, self.m, self.n, self.h,
             self.tolerance, self.I, self.t,
-            self.dt, self.interval
+            self.dt, self.interval, self.get_dt_list
         )
+        dist = extra[0]
+        dt_list = extra[1] if self.get_dt_list else None
         if self.verbose:
             print(f'[#{self.count}] {self.t:.3f} -> {self.T} '
                   f'{{dt={self.dt:.4e}}}'+' '*10, end='\r')
         self.t += dist
+        return_tuple = None
+
+        if self.get_dt_list:
+            return_tuple = self.V, self.m, self.n, self.h, dt_list
+        else:
+            return_tuple = self.V, self.m, self.n, self.h
         if self.t >= self.T:
             self.mode = AP.NilMode
             raise StopIteration
         self.count += 1
         if self.mode == AP.IterMode:
-            return self.V, self.m, self.n, self.h
+            return return_tuple
         elif self.mode == AP.EnumerateMode:
-            return self.t, (self.V, self.m, self.n, self.h)
+            return self.t, (return_tuple)
 
 
 
@@ -430,42 +440,48 @@ def animate(
 
 if __name__ == '__main__':
 
-    T = 10.
-    draw_interval = 0.03
+    T = 1.6
+    draw_interval = 0.01
     base_args = dict (
         dx=0.005,
         D=0.5,
         E_K=-12.0,
-        dt_factor=0.2,
+        dt_factor=0.5,
         verbosity=1
     )
 
     "Create the neuron object"
     neuron = AP(**base_args)
-    # neuron.set_initial_voltage(0.)
-    neuron.set_initial_voltage(10., start=0.8, end=1.0)
+    neuron.set_initial_voltage(0.)
+    # neuron.set_initial_voltage(10.05, start=0.8, end=1.0)
     # neuron.set_current(1.2)
-    neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
-    # neuron.set_current(0.1, max_time=0.5)
+    # neuron.set_current( lambda t: np.max([1.4*np.cos(2.*t), 0.]) )
+    neuron.set_current(0.2, max_time=0.1)
+    # neuron.set_current(
+    #         lambda t: 1.0 if int(round(1.5*t)) %2 else 0
+    #         )
+    # neuron.set_current(
+            # lambda t: 1.0 if int(round(1.5*t)) %2 else 0
+            # )
     # neuron.set_current(1.2)
     neuron.set_iter_params(interval=draw_interval, T=T, tolerance=5e-4)
 
     "Create the figure object"
     # fig = NeuronFigure2D(True, figsize=(20,10))
     # fig.set_ylimits((-60, 250), (-0.2, 1.2))
-    fig = NeuronFigure2D(plot_gates=True, figsize=(20,10))
+    # fig = NeuronFigure2D(plot_gates=False, figsize=(10,10))
     # fig.set_title(ax_title, '')
-    fig.set_ylimits((-60, 250), (-0.2, 1.2))
+    # fig.set_ylimits(-60, 250)
 
     "(could also be a 3d figure)"
-    # X, Y = draw_path(neuron.N, neuron.dx, chance=0.75, bounds=PI/3, rot_scale=0.4)
-    # fig = NeuronFigure3D(figsize=(10,10), elev=20, azim=-85)
-    # fig.set_title(ax_title)
-    # fig.set_zlimit(-60, 250)
-    # fig.set_path(X, Y) 
+    X, Y = draw_path(neuron.N, neuron.dx, chance=0.75, bounds=PI/3, rot_scale=0.4)
+    fig = NeuronFigure3D(figsize=(10,10), elev=20, azim=-85)
+    # # fig.set_title(ax_title)
+    fig.set_zlimit(-60, 250)
+    fig.set_path(X, Y) 
 
 
-    animate('current_sine_voltage_at_end.mp4', fig, neuron, save_path='~/Desktop', dpi=150)
+    animate('cool__test.mp4', fig, neuron, save_path='~/Desktop', dpi=150)
 
 
 

@@ -526,7 +526,7 @@ extern "C"
 	static PyObject* call_get_next_V_n(PyObject* self, PyObject *const *args, Py_ssize_t nargs)
 	{
 #if TYPE_CHECK
-		if (nargs != 9)
+		if (nargs != 9 && nargs != 10)
 		{
 			PyErr_SetString(PyExc_TypeError, "Incorrect number of arguments!");
 			Py_RETURN_NONE;
@@ -555,6 +555,11 @@ extern "C"
 				Py_RETURN_NONE;
 			}
 		}
+		if (nargs == 10 && !PyBool_Check(args[9]))
+		{
+			PyErr_SetString(PyExc_TypeError, "Expected a boolean for argument #9!");
+			Py_RETURN_NONE;
+		}
 #endif
 		if(!check_dims(V, m, n, h))
 		{
@@ -568,6 +573,15 @@ extern "C"
 			   dt 			= PyFloat_AsDouble(args[7]),
 			   t_int 		= PyFloat_AsDouble(args[8]);
 
+		int get_dt_list = 0;
+
+		if (nargs == 10)
+			get_dt_list = PyObject_IsTrue(args[9]);
+
+		PyObject* dt_list = nullptr;
+
+		if (get_dt_list)
+			dt_list = PyList_New(0);
 
 		bool is_I_callable = PyCallable_Check(args[5]);
 		PyObject *callable = nullptr;
@@ -586,12 +600,16 @@ extern "C"
 				);
 
 			dt = get_next_V(V, m, n, h, tolerance, I, t, dt);
+			if (get_dt_list)
+				PyList_Append(dt_list, PyFloat_FromDouble(dt));
 			dist += dt;
 		}
 
-		PyObject *tuple_return = PyTuple_New(2);
+		PyObject *tuple_return = PyTuple_New(get_dt_list ? 3 : 2);
 		PyTuple_SetItem(tuple_return, 0, PyFloat_FromDouble(dt));
 		PyTuple_SetItem(tuple_return, 1, PyFloat_FromDouble(dist));
+		if (get_dt_list)
+			PyTuple_SetItem(tuple_return, 2, dt_list);
 		return tuple_return;
 	}
 
