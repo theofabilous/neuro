@@ -20,11 +20,6 @@ extern "C"
 #include <numeric> // accumulate, reduce. iota, etc.
 #include <algorithm> // transform, ranges stuff, min, max, etc.
 
-// Concurrency
-#include <atomic>
-#include <mutex>
-#include <thread>
-
 
 #define TYPE_CHECK      0
 #define STATIC_SIZES    0
