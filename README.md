@@ -1,16 +1,36 @@
-![image](https://github.com/theofabilous/neuro/assets/92238946/a3bb8fde-ea68-4637-85a9-802484727475)
-![image](https://github.com/theofabilous/neuro/assets/92238946/a04bbb7f-8f55-40f3-8d03-44300a637678)
-![image](https://github.com/theofabilous/neuro/assets/92238946/0fc3c576-a662-40ed-aef5-71d12387620e)
-![image](https://github.com/theofabilous/neuro/assets/92238946/674281ea-7746-485d-aae4-40c070cbee21)
-![image](https://github.com/theofabilous/neuro/assets/92238946/ea7e8fda-5d22-48e0-9662-90a787305f7c)
-![image](https://github.com/theofabilous/neuro/assets/92238946/a5b113a9-7b8b-4caa-8448-7f5fc58a8f5f)
-![image](https://github.com/theofabilous/neuro/assets/92238946/1b093581-4a2e-4136-97bd-099a7f55357c)
-![image](https://github.com/theofabilous/neuro/assets/92238946/2b1b5eca-00ca-4868-99cf-71822c4f7c86)
-![image](https://github.com/theofabilous/neuro/assets/92238946/8c13d911-c5cf-4271-8a1e-9369ff5664f2)
-![image](https://github.com/theofabilous/neuro/assets/92238946/e5c8fcb1-8699-4e14-bbef-490c0fd6e5ea)
-![image](https://github.com/theofabilous/neuro/assets/92238946/a72e97d9-9a1d-4a4b-a851-e31ba7e5dbcc)
-![image](https://github.com/theofabilous/neuro/assets/92238946/8c19611c-6b4a-4423-b89b-ec169184b56f)
-![image](https://github.com/theofabilous/neuro/assets/92238946/e13d1672-4adf-4544-8035-46136e3b5531)
-![image](https://github.com/theofabilous/neuro/assets/92238946/4d56a63c-c2d6-4407-9c6b-ad418d192ed6)
-![image](https://github.com/theofabilous/neuro/assets/92238946/b86d128c-935d-4426-9714-3884e64e99a7)
-![image](https://github.com/theofabilous/neuro/assets/92238946/37be63b8-6662-4fa6-83c0-dc5a8f046df2)
+<!-- abstract -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/911be3b0-88d1-4638-90c6-46d0f50e5424)
+
+<!-- intro -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/8bea114e-d4a8-4c96-ad0d-290b908547b9)
+
+<!-- theory -->
+  <!-- 2.1 biol prelims -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/ec8ff5e5-6390-48be-81db-6e4be70a9491)
+  <!-- 2.2 derivation -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/4af1c5f0-5c65-42e3-b769-8c40b67e361e)
+![image](https://github.com/theofabilous/neuro/assets/92238946/359a1bea-2b68-4387-8152-33e046112f4f)
+  <!-- 2.3 model -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/7bac72df-b660-4dd3-873a-031ad1a8bd25)
+
+<!-- method -->
+  <!-- 3.1 discretization -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/984f66d3-898c-41c0-9ea9-857446c9a5bc)
+  <!-- 3.2 solving -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/e1013e09-416a-49e2-bf03-ccb385e4285f)
+  <!-- 3.3 note on convergence -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/a8c6e3c4-60cf-49b4-b05e-33a7442185a1)
+  <!-- 3.4 adaptive time stepping -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/d81567e5-9fe3-4dbf-879d-c297640e05e6)
+  <!-- 3.5 details -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/9d213374-7581-4901-9f96-08adbe78de13)
+
+
+<!-- results -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/9052f80b-5f20-4e7f-83f6-de1317dadee4)
+
+<!-- conclusion -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/265c9e83-a747-45ba-8b14-c9ae3a25717c)
+
+<!-- refs -->
+![image](https://github.com/theofabilous/neuro/assets/92238946/4257e0a8-4c90-4cce-bea2-a5e2f04ce2f9)
