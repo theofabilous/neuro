@@ -243,9 +243,6 @@ get_next_V(
             M_star      = array::Zero(N),
             N_star      = array::Zero(N),
             H_star      = array::Zero(N)
-                // ,
-          //    A_w         = array::Zero(N),
-          //    B_w         = array::Zero(N)
         ;
 
     vector B_star       = vector::Zero(N),
@@ -271,34 +268,18 @@ get_next_V(
             M_star = Gate::explicit_step<Gate::M>(V_star, eig_M, dt);
             N_star = Gate::explicit_step<Gate::N>(V_star, eig_N, dt);
             H_star = Gate::explicit_step<Gate::H>(V_star, eig_H, dt);
-            // tie( M_star, N_star, H_star ) = 
-            //  // Gate::explicit_step(eig_V, eig_M, eig_N, eig_H, dt);
-            //  Gate::explicit_step(V_star, eig_M, eig_N, eig_H, dt);
         }
         else
         {
             M_star = Gate::implicit_step<Gate::M>(V_star, eig_M, dt);
             N_star = Gate::implicit_step<Gate::N>(V_star, eig_N, dt);
             H_star = Gate::implicit_step<Gate::H>(V_star, eig_H, dt);
-            // tie( M_star, N_star, H_star ) = 
-            //  // Gate::implicit_step(eig_V, eig_M, eig_N, eig_H, dt);
-            //  Gate::implicit_step(V_star, eig_M, eig_N, eig_H, dt);
         }
 
         if (count == 0)
-        {
             V_x0 = V_star(0);
-            // M_x0 = M_star(0);
-            // N_x0 = N_star(0);
-            // H_x0 = H_star(0);
-        }
         else
-        {
             V_star(0) = V_x0;
-            // M_star(0) = M_x0;
-            // N_star(0) = N_x0;
-            // H_star(0) = H_x0;
-        }
 
 
         if (correction)
@@ -309,9 +290,6 @@ get_next_V(
             H_dist = H_star - eig_H;
 
             V_dist(0) = 0.;
-            // M_dist(0) = 0.;
-            // N_dist(0) = 0.;
-            // H_dist(0) = 0.;
 
             err = std::max({
                 V_dist.norm(),
@@ -379,7 +357,6 @@ static inline PyObject* call_gating_function_impl(PyObject* self, PyObject* V)
     }
 #endif
 
-    // array eig_V(
     array_ref eig_V(
         static_cast<double*>( PyArray_DATA(V_array) ),
         PyArray_DIM(V_array, 0)
